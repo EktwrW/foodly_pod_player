@@ -215,6 +215,20 @@ class PodGetXVideoController extends _PodGesturesController {
     }
   }
 
+  void reinitializeController() {
+    // Restablecer estado del controlador
+    controllerInitialized = false;
+    _podVideoState = PodVideoState.paused;
+
+    // Limpiar y reinicializar listeners si es necesario
+    _videoCtr?.removeListener(videoListner);
+    _videoCtr?.dispose();
+    _videoCtr = null;
+
+    update();
+    update(['update-all']);
+  }
+
   ///Listning on keyboard events
   void onKeyBoardEvents({
     required KeyEvent event,
@@ -321,5 +335,12 @@ class PodGetXVideoController extends _PodGesturesController {
     keyboardFocusWeb?.requestFocus();
     keyboardFocusWeb?.addListener(keyboadListner);
     await videoInit();
+  }
+
+  @override
+  void onClose() {
+    // Limpiar recursos al cerrar
+    _videoCtr?.dispose();
+    super.onClose();
   }
 }

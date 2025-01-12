@@ -192,6 +192,11 @@ class _PodVideoController extends _PodUiController {
   }) async {
     podLog('-full-screen-disable-entred');
     if (isFullScreen) {
+      // Asegurar que el controlador esté registrado
+      if (!Get.isRegistered<PodGetXVideoController>()) {
+        Get.put(this);
+      }
+
       if (onToggleFullScreen != null) {
         await onToggleFullScreen!(false);
       } else {
@@ -219,7 +224,17 @@ class _PodVideoController extends _PodUiController {
 
   void _exitFullScreenView(BuildContext context, String tag) {
     podLog('popped-full-screen');
-    Navigator.of(fullScreenContext).pop();
+
+    // Intentar obtener o registrar el controlador
+    try {
+      final controller = Get.find<PodGetXVideoController>();
+      controller.reinitializeController();
+    } catch (e) {
+      // Si no se encuentra, registrarlo nuevamente
+      Get.put(this);
+    }
+
+    Navigator.of(fullScreenContext).maybePop();
   }
 
   void _enableFullScreenView(String tag) {
@@ -234,8 +249,7 @@ class _PodVideoController extends _PodUiController {
             tag: tag,
           ),
           reverseTransitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
             opacity: animation,
             child: child,
           ),
@@ -248,10 +262,7 @@ class _PodVideoController extends _PodUiController {
   String calculateVideoDuration(Duration duration) {
     final totalHour = duration.inHours == 0 ? '' : '${duration.inHours}:';
     final totalMinute = duration.toString().split(':')[1];
-    final totalSeconds = (duration - Duration(minutes: duration.inMinutes))
-        .inSeconds
-        .toString()
-        .padLeft(2, '0');
+    final totalSeconds = (duration - Duration(minutes: duration.inMinutes)).inSeconds.toString().padLeft(2, '0');
     final String videoLength = '$totalHour$totalMinute:$totalSeconds';
     return videoLength;
   }
