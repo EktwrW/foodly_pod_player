@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:universal_html/html.dart' as uni_html;
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../pod_player.dart';
 import '../utils/logger.dart';
@@ -111,25 +112,40 @@ class PodGetXVideoController extends _PodGesturesController {
 
         break;
       case PodVideoPlayerType.youtube:
-        final urls = await getVideoQualityUrlsFromYoutube(
-          playVideoFrom.dataSource!,
-          playVideoFrom.live,
-        );
-        final url = await getUrlFromVideoQualityUrls(
-          qualityList: podPlayerConfig.videoQualityPriority,
-          videoUrls: urls,
-        );
+        try {
+          final urls = await getVideoQualityUrlsFromYoutube(
+            playVideoFrom.dataSource!,
+            playVideoFrom.live,
+          );
+          final url = await getUrlFromVideoQualityUrls(
+            qualityList: podPlayerConfig.videoQualityPriority,
+            videoUrls: urls,
+          );
 
-        ///
-        _videoCtr = VideoPlayerController.networkUrl(
-          Uri.parse(url),
-          closedCaptionFile: playVideoFrom.closedCaptionFile,
-          formatHint: playVideoFrom.formatHint,
-          videoPlayerOptions: playVideoFrom.videoPlayerOptions,
-          httpHeaders: playVideoFrom.httpHeaders,
-        );
-        playingVideoUrl = url;
-
+          if (url.contains('youtube.com/embed/')) {
+            // Si es una URL de embed, usamos un enfoque diferente
+            _videoCtr = VideoPlayerController.networkUrl(
+              Uri.parse(url),
+              formatHint: VideoFormat.other,
+              httpHeaders: {
+                'Referer': 'https://www.youtube.com',
+                'Origin': 'https://www.youtube.com',
+              },
+            );
+          } else {
+            _videoCtr = VideoPlayerController.networkUrl(
+              Uri.parse(url),
+              closedCaptionFile: playVideoFrom.closedCaptionFile,
+              formatHint: playVideoFrom.formatHint,
+              videoPlayerOptions: playVideoFrom.videoPlayerOptions,
+              httpHeaders: playVideoFrom.httpHeaders,
+            );
+          }
+          playingVideoUrl = url;
+        } catch (e) {
+          podLog('Error initializing YouTube player: $e');
+          rethrow;
+        }
         break;
       case PodVideoPlayerType.vimeo:
         await getQualityUrlsFromVimeoId(

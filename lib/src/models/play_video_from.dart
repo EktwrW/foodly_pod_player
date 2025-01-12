@@ -9,7 +9,7 @@ class PlayVideoFrom {
   final VideoFormat? formatHint;
   final String? package;
   final File? file;
-  final List<VideoQalityUrls>? videoQualityUrls;
+  final List<VideoQualityUrls>? videoQualityUrls;
   final Future<ClosedCaptionFile>? closedCaptionFile;
   final VideoPlayerOptions? videoPlayerOptions;
   final Map<String, String> httpHeaders;
@@ -130,7 +130,7 @@ class PlayVideoFrom {
     );
   }
   factory PlayVideoFrom.networkQualityUrls({
-    required List<VideoQalityUrls> videoUrls,
+    required List<VideoQualityUrls> videoUrls,
     VideoFormat? formatHint,
     Future<ClosedCaptionFile>? closedCaptionFile,
     VideoPlayerOptions? videoPlayerOptions,

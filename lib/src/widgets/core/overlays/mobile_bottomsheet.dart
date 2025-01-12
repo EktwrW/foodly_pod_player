@@ -135,7 +135,7 @@ class _VideoQualitySelectorMob extends StatelessWidget {
                 onTap: () {
                   onTap != null ? onTap!() : Navigator.of(context).pop();
 
-                  podCtr.changeVideoQuality(e.quality);
+                  podCtr.changeVideoQuality(int.parse(e.quality));
                 },
               ),
             )

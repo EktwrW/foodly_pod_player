@@ -24,7 +24,7 @@ class VideoApis {
     }
   }
 
-  static Future<List<VideoQalityUrls>?> getVimeoVideoQualityUrls(
+  static Future<List<VideoQualityUrls>?> getVimeoVideoQualityUrls(
     String videoId,
     String? hash,
   ) async {
@@ -35,32 +35,26 @@ class VideoApis {
       final hlsData = jsonData['hls'];
       final defaultCDN = hlsData['default_cdn'];
       final cdnVideoUrl = (hlsData['cdns'][defaultCDN]['url'] as String?) ?? '';
-      final List<dynamic> rawStreamUrls =
-          (dashData['streams'] as List<dynamic>?) ?? <dynamic>[];
+      final List<dynamic> rawStreamUrls = (dashData['streams'] as List<dynamic>?) ?? <dynamic>[];
 
-      final List<VideoQalityUrls> vimeoQualityUrls = [];
+      final List<VideoQualityUrls> vimeoQualityUrls = [];
 
       for (final item in rawStreamUrls) {
         final sepList = cdnVideoUrl.split('/sep/video/');
         final firstUrlPiece = sepList.firstOrNull ?? '';
-        final lastUrlPiece =
-            ((sepList.lastOrNull ?? '').split('/').lastOrNull) ??
-                (sepList.lastOrNull ?? '');
-        final String urlId =
-            ((item['id'] ?? '') as String).split('-').firstOrNull ?? '';
+        final lastUrlPiece = ((sepList.lastOrNull ?? '').split('/').lastOrNull) ?? (sepList.lastOrNull ?? '');
+        final String urlId = ((item['id'] ?? '') as String).split('-').firstOrNull ?? '';
         vimeoQualityUrls.add(
-          VideoQalityUrls(
-            quality: int.parse(
-              (item['quality'] as String?)?.split('p').first ?? '0',
-            ),
+          VideoQualityUrls(
+            quality: (item['quality'] as String?)?.split('p').first ?? '0',
             url: '$firstUrlPiece/sep/video/$urlId/$lastUrlPiece',
           ),
         );
       }
       if (vimeoQualityUrls.isEmpty) {
         vimeoQualityUrls.add(
-          VideoQalityUrls(
-            quality: 720,
+          VideoQualityUrls(
+            quality: '720',
             url: cdnVideoUrl,
           ),
         );
@@ -80,7 +74,7 @@ class VideoApis {
     }
   }
 
-  static Future<List<VideoQalityUrls>?> getVimeoPrivateVideoQualityUrls(
+  static Future<List<VideoQualityUrls>?> getVimeoPrivateVideoQualityUrls(
     String videoId,
     Map<String, String> httpHeader,
   ) async {
@@ -89,18 +83,16 @@ class VideoApis {
         Uri.parse('https://api.vimeo.com/videos/$videoId'),
         headers: httpHeader,
       );
-      final jsonData =
-          (jsonDecode(response.body)['files'] as List<dynamic>?) ?? [];
+      final jsonData = (jsonDecode(response.body)['files'] as List<dynamic>?) ?? [];
 
-      final List<VideoQalityUrls> list = [];
+      final List<VideoQualityUrls> list = [];
       for (int i = 0; i < jsonData.length; i++) {
-        final String quality =
-            (jsonData[i]['rendition'] as String?)?.split('p').first ?? '0';
+        final String quality = (jsonData[i]['rendition'] as String?)?.split('p').first ?? '0';
         final int? number = int.tryParse(quality);
         if (number != null && number != 0) {
           list.add(
-            VideoQalityUrls(
-              quality: number,
+            VideoQualityUrls(
+              quality: '$number',
               url: jsonData[i]['link'] as String,
             ),
           );
@@ -120,20 +112,20 @@ class VideoApis {
     }
   }
 
-  static Future<List<VideoQalityUrls>?> getYoutubeVideoQualityUrls(
+  static Future<List<VideoQualityUrls>?> getYoutubeVideoQualityUrls(
     String youtubeIdOrUrl,
     bool live,
   ) async {
     try {
       final yt = YoutubeExplode();
-      final urls = <VideoQalityUrls>[];
+      final urls = <VideoQualityUrls>[];
       if (live) {
         final url = await yt.videos.streamsClient.getHttpLiveStreamUrl(
           VideoId(youtubeIdOrUrl),
         );
         urls.add(
-          VideoQalityUrls(
-            quality: 360,
+          VideoQualityUrls(
+            quality: '360',
             url: url,
           ),
         );
@@ -144,8 +136,8 @@ class VideoApis {
         );
         urls.addAll(
           manifest.muxed.map(
-            (element) => VideoQalityUrls(
-              quality: int.parse(element.qualityLabel.split('p')[0]),
+            (element) => VideoQualityUrls(
+              quality: element.qualityLabel.split('p')[0],
               url: element.url.toString(),
             ),
           ),

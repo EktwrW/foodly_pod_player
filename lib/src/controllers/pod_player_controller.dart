@@ -185,8 +185,7 @@ class PodPlayerController {
       );
 
   //Change double tap duration
-  void setDoubeTapForwarDuration(int seconds) =>
-      _ctr.doubleTapForwardSeconds = seconds;
+  void setDoubeTapForwarDuration(int seconds) => _ctr.doubleTapForwardSeconds = seconds;
 
   ///Jumps to specific position of the video
   Future<void> videoSeekTo(Duration moment) async {
@@ -249,14 +248,14 @@ class PodPlayerController {
     _ctr.onVimeoVideoQualityChanged = callback;
   }
 
-  static Future<List<VideoQalityUrls>?> getYoutubeUrls(
+  static Future<List<VideoQualityUrls>?> getYoutubeUrls(
     String youtubeIdOrUrl, {
     bool live = false,
   }) {
     return VideoApis.getYoutubeVideoQualityUrls(youtubeIdOrUrl, live);
   }
 
-  static Future<List<VideoQalityUrls>?> getVimeoUrls(
+  static Future<List<VideoQualityUrls>?> getVimeoUrls(
     String videoId, {
     String? hash,
   }) {
