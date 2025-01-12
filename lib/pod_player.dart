@@ -1,5 +1,5 @@
 /// Pod Player library
-library last_pod_player;
+library foodly_pod_player;
 
 export 'package:video_player/video_player.dart';
 
