@@ -132,6 +132,7 @@ class VideoApis {
       } else {
         final manifest = await yt.videos.streamsClient.getManifest(
           youtubeIdOrUrl,
+          ytClients: [YoutubeApiClient.mediaConnect],
         );
         urls.addAll(
           manifest.muxed.map(
