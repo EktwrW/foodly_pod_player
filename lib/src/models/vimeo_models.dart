@@ -1,5 +1,5 @@
 class VideoQualityUrls {
-  final String quality;
+  final int quality;
   final String url;
 
   VideoQualityUrls({
@@ -8,7 +8,7 @@ class VideoQualityUrls {
   });
 
   factory VideoQualityUrls.fromJson(Map<String, dynamic> json) => VideoQualityUrls(
-        quality: json['quality'] as String,
+        quality: json['quality'] as int,
         url: json['url'] as String,
       );
 

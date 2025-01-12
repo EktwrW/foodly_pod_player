@@ -46,7 +46,7 @@ class VideoApis {
         final String urlId = ((item['id'] ?? '') as String).split('-').firstOrNull ?? '';
         vimeoQualityUrls.add(
           VideoQualityUrls(
-            quality: (item['quality'] as String?)?.split('p').first ?? '0',
+            quality: int.parse((item['quality'] as String?)?.split('p').first ?? '720'),
             url: '$firstUrlPiece/sep/video/$urlId/$lastUrlPiece',
           ),
         );
@@ -54,7 +54,7 @@ class VideoApis {
       if (vimeoQualityUrls.isEmpty) {
         vimeoQualityUrls.add(
           VideoQualityUrls(
-            quality: '720',
+            quality: 720,
             url: cdnVideoUrl,
           ),
         );
@@ -92,7 +92,7 @@ class VideoApis {
         if (number != null && number != 0) {
           list.add(
             VideoQualityUrls(
-              quality: '$number',
+              quality: number,
               url: jsonData[i]['link'] as String,
             ),
           );
@@ -125,7 +125,7 @@ class VideoApis {
         );
         urls.add(
           VideoQualityUrls(
-            quality: '360',
+            quality: 360,
             url: url,
           ),
         );
@@ -137,7 +137,7 @@ class VideoApis {
         urls.addAll(
           manifest.muxed.map(
             (element) => VideoQualityUrls(
-              quality: element.qualityLabel.split('p')[0],
+              quality: int.tryParse(element.qualityLabel.split('p')[0]) ?? 720,
               url: element.url.toString(),
             ),
           ),

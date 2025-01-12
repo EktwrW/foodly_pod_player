@@ -99,7 +99,7 @@ class _PodVideoQualityController extends _PodVideoController {
 
     urlWithQuality ??= fallback;
     _videoQualityUrl = urlWithQuality.url;
-    vimeoPlayingVideoQuality = int.parse(urlWithQuality.quality);
+    vimeoPlayingVideoQuality = urlWithQuality.quality;
     return _videoQualityUrl;
   }
 
@@ -128,7 +128,7 @@ class _PodVideoQualityController extends _PodVideoController {
           final url = element.url.toString();
           urls.add(
             VideoQualityUrls(
-              quality: quality,
+              quality: int.tryParse(quality) ?? 720,
               url: url,
             ),
           );
@@ -157,7 +157,7 @@ class _PodVideoQualityController extends _PodVideoController {
       if (videoId != null) {
         return [
           VideoQualityUrls(
-            quality: 'auto',
+            quality: 720,
             url: 'https://www.youtube.com/embed/$videoId',
           ),
         ];

@@ -17,11 +17,11 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetworkQualityUrls> {
       playVideoFrom: PlayVideoFrom.networkQualityUrls(
         videoUrls: [
           VideoQualityUrls(
-            quality: '360',
+            quality: 360,
             url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
           ),
           VideoQualityUrls(
-            quality: '720',
+            quality: 720,
             url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
           ),
         ],

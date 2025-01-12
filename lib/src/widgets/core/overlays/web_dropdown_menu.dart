@@ -132,7 +132,7 @@ class _WebSettingsDropdownState extends State<_WebSettingsDropdown> {
               ),
               onTap: () {
                 podCtr.changeVideoQuality(
-                  int.parse(e.quality),
+                  e.quality,
                 );
               },
             ),
