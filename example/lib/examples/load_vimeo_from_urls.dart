@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:last_pod_player/pod_player.dart';
+import 'package:foodly_pod_player/pod_player.dart';
 
 void main(List<String> args) {
   runApp(const VimeoApp());

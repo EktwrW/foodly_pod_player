@@ -1,4 +1,4 @@
-part of 'package:last_pod_player/src/pod_player.dart';
+part of 'package:foodly_pod_player/src/pod_player.dart';
 
 class _WebSettingsDropdown extends StatefulWidget {
   final String tag;
@@ -25,9 +25,8 @@ class _WebSettingsDropdownState extends State<_WebSettingsDropdown> {
             toolTipMesg: podCtr.podPlayerLabels.settings,
             color: Colors.white,
             child: const Icon(Icons.settings),
-            onPressed: () => podCtr.isFullScreen
-                ? podCtr.isWebPopupOverlayOpen = true
-                : podCtr.isWebPopupOverlayOpen = false,
+            onPressed: () =>
+                podCtr.isFullScreen ? podCtr.isWebPopupOverlayOpen = true : podCtr.isWebPopupOverlayOpen = false,
             onTapDown: (details) async {
               final settingsMenu = await showMenu<String>(
                 context: context,

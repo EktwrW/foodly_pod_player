@@ -51,4 +51,4 @@ This plugin fork from pod_player official [`pod_player`](https://pub.dev/package
 
 ---
 
-Please run the app in the [`example/`](https://github.com/ayahsujana/last_pod_player/tree/master/example) folder to start playing!
+Please run the app in the [`example/`](https://github.com/ayahsujana/foodly_pod_player/tree/master/example) folder to start playing!

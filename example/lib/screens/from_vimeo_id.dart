@@ -1,4 +1,4 @@
-import 'package:last_pod_player/pod_player.dart';
+import 'package:foodly_pod_player/pod_player.dart';
 import 'package:flutter/material.dart';
 
 class PlayVideoFromVimeoId extends StatefulWidget {
@@ -35,11 +35,7 @@ class _PlayVideoFromVimeoIdState extends State<PlayVideoFromVimeoId> {
         child: Center(
           child: ListView(
             shrinkWrap: true,
-            children: [
-              PodVideoPlayer(controller: controller),
-              const SizedBox(height: 40),
-              _loadVideoFromUrl()
-            ],
+            children: [PodVideoPlayer(controller: controller), const SizedBox(height: 40), _loadVideoFromUrl()],
           ),
         ),
       ),

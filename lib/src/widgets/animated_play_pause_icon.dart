@@ -1,4 +1,4 @@
-part of 'package:last_pod_player/src/pod_player.dart';
+part of 'package:foodly_pod_player/src/pod_player.dart';
 
 class _AnimatedPlayPauseIcon extends StatefulWidget {
   final double? size;
@@ -13,8 +13,7 @@ class _AnimatedPlayPauseIcon extends StatefulWidget {
   State<_AnimatedPlayPauseIcon> createState() => _AnimatedPlayPauseIconState();
 }
 
-class _AnimatedPlayPauseIconState extends State<_AnimatedPlayPauseIcon>
-    with SingleTickerProviderStateMixin {
+class _AnimatedPlayPauseIconState extends State<_AnimatedPlayPauseIcon> with SingleTickerProviderStateMixin {
   late final AnimationController _payCtr;
   late PodGetXVideoController _podCtr;
   @override
@@ -60,12 +59,9 @@ class _AnimatedPlayPauseIconState extends State<_AnimatedPlayPauseIcon>
           id: 'podVideoState',
           builder: (f) => MaterialIconButton(
             toolTipMesg: f.isvideoPlaying
-                ? podCtr.podPlayerLabels.pause ??
-                    'Pause${kIsWeb ? ' (space)' : ''}'
-                : podCtr.podPlayerLabels.play ??
-                    'Play${kIsWeb ? ' (space)' : ''}',
-            onPressed:
-                podCtr.isOverlayVisible ? podCtr.togglePlayPauseVideo : null,
+                ? podCtr.podPlayerLabels.pause ?? 'Pause${kIsWeb ? ' (space)' : ''}'
+                : podCtr.podPlayerLabels.play ?? 'Play${kIsWeb ? ' (space)' : ''}',
+            onPressed: podCtr.isOverlayVisible ? podCtr.togglePlayPauseVideo : null,
             child: onStateChange(podCtr),
           ),
         );

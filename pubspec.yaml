@@ -1,4 +1,4 @@
-name: last_pod_player
+name: foodly_pod_player
 description: Vimeo and youtube player for flutter, Pod player provides customizable video player controls that support android, ios and web.
 version: 0.0.1
 homepage: https://github.com/newtaDev/pod_player
@@ -17,7 +17,6 @@ dependencies:
   wakelock_plus: ^1.2.8
   universal_html: ^2.2.4
   youtube_explode_dart: ^2.3.1
-
 
 dev_dependencies:
   flutter_test:

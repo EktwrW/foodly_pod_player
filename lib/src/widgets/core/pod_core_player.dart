@@ -1,4 +1,4 @@
-part of 'package:last_pod_player/src/pod_player.dart';
+part of 'package:foodly_pod_player/src/pod_player.dart';
 
 class _PodCoreVideoPlayer extends StatelessWidget {
   final VideoPlayerController videoPlayerCtr;
@@ -18,9 +18,7 @@ class _PodCoreVideoPlayer extends StatelessWidget {
       builder: (ctrx) {
         return RawKeyboardListener(
           autofocus: true,
-          focusNode:
-              (podCtr.isFullScreen ? FocusNode() : podCtr.keyboardFocusWeb) ??
-                  FocusNode(),
+          focusNode: (podCtr.isFullScreen ? FocusNode() : podCtr.keyboardFocusWeb) ?? FocusNode(),
           onKey: (value) => podCtr.onKeyBoardEvents(
             event: value,
             appContext: ctrx,
@@ -46,8 +44,7 @@ class _PodCoreVideoPlayer extends StatelessWidget {
                       return const SizedBox();
                     }
 
-                    if (podCtr.podVideoState == PodVideoState.paused &&
-                        podCtr.videoPosition == Duration.zero) {
+                    if (podCtr.podVideoState == PodVideoState.paused && podCtr.videoPosition == Duration.zero) {
                       return SizedBox.expand(
                         child: TweenAnimationBuilder<double>(
                           builder: (context, value, child) => Opacity(
@@ -132,16 +129,14 @@ class _PodCoreVideoPlayer extends StatelessWidget {
                       : GetBuilder<PodGetXVideoController>(
                           tag: tag,
                           id: 'overlay',
-                          builder: (podCtr) => podCtr.isOverlayVisible ||
-                                  !podCtr.alwaysShowProgressBar
+                          builder: (podCtr) => podCtr.isOverlayVisible || !podCtr.alwaysShowProgressBar
                               ? const SizedBox()
                               : Align(
                                   alignment: Alignment.bottomCenter,
                                   child: PodProgressBar(
                                     tag: tag,
                                     alignment: Alignment.bottomCenter,
-                                    podProgressBarConfig:
-                                        podCtr.podProgressBarConfig,
+                                    podProgressBarConfig: podCtr.podProgressBarConfig,
                                   ),
                                 ),
                         ),

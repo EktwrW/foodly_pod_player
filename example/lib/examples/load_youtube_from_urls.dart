@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:last_pod_player/pod_player.dart';
+import 'package:foodly_pod_player/pod_player.dart';
 
 void main(List<String> args) {
   runApp(const YoutubeApp());
@@ -12,8 +12,7 @@ class YoutubeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar:
-            AppBar(title: const Text('Load youtube video from quality urls')),
+        appBar: AppBar(title: const Text('Load youtube video from quality urls')),
         body: const YoutubeVideoViewer(),
       ),
     );

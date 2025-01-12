@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  last_pod_player:
+  foodly_pod_player:
     path: ../
 
   cupertino_icons: ^1.0.5
@@ -26,6 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+
   assets:
     - assets/

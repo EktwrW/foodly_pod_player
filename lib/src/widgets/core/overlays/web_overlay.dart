@@ -1,4 +1,4 @@
-part of 'package:last_pod_player/src/pod_player.dart';
+part of 'package:foodly_pod_player/src/pod_player.dart';
 
 class _WebOverlay extends StatelessWidget {
   final String tag;
@@ -107,16 +107,12 @@ class _WebOverlayBottomControlles extends StatelessWidget {
                           id: 'volume',
                           builder: (podCtr) => MaterialIconButton(
                             toolTipMesg: podCtr.isMute
-                                ? podCtr.podPlayerLabels.unmute ??
-                                    'Unmute${kIsWeb ? ' (m)' : ''}'
-                                : podCtr.podPlayerLabels.mute ??
-                                    'Mute${kIsWeb ? ' (m)' : ''}',
+                                ? podCtr.podPlayerLabels.unmute ?? 'Unmute${kIsWeb ? ' (m)' : ''}'
+                                : podCtr.podPlayerLabels.mute ?? 'Mute${kIsWeb ? ' (m)' : ''}',
                             color: itemColor,
                             onPressed: podCtr.toggleMute,
                             child: Icon(
-                              podCtr.isMute
-                                  ? Icons.volume_off_rounded
-                                  : Icons.volume_up_rounded,
+                              podCtr.isMute ? Icons.volume_off_rounded : Icons.volume_up_rounded,
                             ),
                           ),
                         ),
@@ -160,16 +156,12 @@ class _WebOverlayBottomControlles extends StatelessWidget {
                         _WebSettingsDropdown(tag: tag),
                         MaterialIconButton(
                           toolTipMesg: podCtr.isFullScreen
-                              ? podCtr.podPlayerLabels.exitFullScreen ??
-                                  'Exit full screen${kIsWeb ? ' (f)' : ''}'
-                              : podCtr.podPlayerLabels.fullscreen ??
-                                  'Fullscreen${kIsWeb ? ' (f)' : ''}',
+                              ? podCtr.podPlayerLabels.exitFullScreen ?? 'Exit full screen${kIsWeb ? ' (f)' : ''}'
+                              : podCtr.podPlayerLabels.fullscreen ?? 'Fullscreen${kIsWeb ? ' (f)' : ''}',
                           color: itemColor,
                           onPressed: () => _onFullScreenToggle(podCtr, context),
                           child: Icon(
-                            podCtr.isFullScreen
-                                ? Icons.fullscreen_exit
-                                : Icons.fullscreen,
+                            podCtr.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
                           ),
                         ),
                       ],
