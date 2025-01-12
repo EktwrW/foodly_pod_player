@@ -47,24 +47,44 @@ class _PodVideoQualityController extends _PodVideoController {
     }
   }
 
-  void sortQualityVideoUrls(
-    List<VideoQualityUrls>? urls,
-  ) {
-    final urls0 = urls;
+  void sortQualityVideoUrls(List<VideoQualityUrls>? urls) {
+    // Imprimir estado inicial de la lista
+    podLog('Estado inicial de URLs: ${urls?.length ?? 0}');
 
-    ///has issues with 240p
-    urls0?.removeWhere((element) => element.quality == 240);
-
-    ///has issues with 144p in web
-    if (kIsWeb) {
-      urls0?.removeWhere((element) => element.quality == 144);
+    if (urls == null || urls.isEmpty) {
+      podLog('ADVERTENCIA: Lista de URLs vacía o nula');
+      return;
     }
 
-    ///sort
-    urls0?.sort((a, b) => a.quality.compareTo(b.quality));
+    // Imprimir todas las calidades antes de filtrar
+    podLog('Calidades antes de filtrar: ${urls.map((e) => e.quality).toList()}');
 
-    ///
-    vimeoOrVideoUrls = urls0 ?? [];
+    // Filtrar calidades problemáticas
+    urls.removeWhere((element) {
+      bool remove = element.quality == 240 || (kIsWeb && element.quality == 144);
+
+      if (remove) {
+        podLog('Removiendo calidad: ${element.quality}');
+      }
+      return remove;
+    });
+
+    // Ordenar por calidad
+    try {
+      urls.sort((a, b) => a.quality.compareTo(b.quality));
+    } catch (e) {
+      podLog('Error al ordenar: $e');
+    }
+
+    // Imprimir calidades después de filtrar y ordenar
+    podLog('Calidades después de filtrar: ${urls.map((e) => e.quality).toList()}');
+
+    // Verificar si quedaron URLs
+    if (urls.isEmpty) {
+      podLog('CRÍTICO: No quedaron URLs después de filtrar');
+    }
+
+    vimeoOrVideoUrls = urls;
   }
 
   ///get vimeo quality `ex: 1080p` url
@@ -117,7 +137,6 @@ class _PodVideoQualityController extends _PodVideoController {
       final manifest = await yt.videos.streams.getManifest(youtubeIdOrUrl);
       podLog('Manifest obtenido');
 
-      // Mapeo de calidades de video a enteros
       final qualityMap = {
         VideoQuality.low144: 144,
         VideoQuality.low240: 240,
@@ -129,34 +148,36 @@ class _PodVideoQualityController extends _PodVideoController {
         VideoQuality.high2160: 2160,
       };
 
-      final List<StreamInfo> allStreams = [...manifest.muxed, ...manifest.videoOnly, ...manifest.audioOnly];
+      final List<StreamInfo> allStreams = [...manifest.muxed, ...manifest.videoOnly];
+
+      podLog('Número total de streams: ${allStreams.length}');
 
       final urls = <VideoQualityUrls>[];
 
       for (final element in allStreams) {
         int quality = 0;
 
-        // Manejar diferentes tipos de streams
         if (element is MuxedStreamInfo) {
           quality = qualityMap[element.videoQuality] ?? 0;
         } else if (element is VideoOnlyStreamInfo) {
           quality = qualityMap[element.videoQuality] ?? 0;
-        } else {
-          // Omitir streams de audio solo
-          continue;
         }
 
-        final url = element.url.toString();
+        if (quality > 0) {
+          final url = element.url.toString();
 
-        podLog('Stream encontrado - Calidad: $quality, URL: $url');
+          podLog('Stream válido - Calidad: $quality, URL: $url');
 
-        urls.add(
-          VideoQualityUrls(
-            quality: quality,
-            url: url,
-          ),
-        );
+          urls.add(
+            VideoQualityUrls(
+              quality: quality,
+              url: url,
+            ),
+          );
+        }
       }
+
+      podLog('URLs encontradas: ${urls.length}');
 
       yt.close();
 
@@ -176,7 +197,6 @@ class _PodVideoQualityController extends _PodVideoController {
         }
       }
 
-      podLog('Número total de URLs: ${urls.length}');
       return urls;
     } catch (e) {
       podLog('Error detallado al obtener URLs: $e');
