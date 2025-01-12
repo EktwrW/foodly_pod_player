@@ -38,8 +38,9 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
           strokeWidth: 2,
         );
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (_, __) async {
         if (kIsWeb) {
           await _podCtr.disableFullScreen(
             context,
@@ -47,8 +48,9 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
             enablePop: false,
           );
         }
-        if (!kIsWeb) await _podCtr.disableFullScreen(context, widget.tag);
-        return true;
+        if (!kIsWeb) {
+          await _podCtr.disableFullScreen(context, widget.tag);
+        }
       },
       child: Scaffold(
         backgroundColor: Colors.black,

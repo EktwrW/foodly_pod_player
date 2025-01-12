@@ -201,40 +201,46 @@ class PodGetXVideoController extends _PodGesturesController {
 
   ///Listning on keyboard events
   void onKeyBoardEvents({
-    required RawKeyEvent event,
+    required KeyEvent event,
     required BuildContext appContext,
     required String tag,
   }) {
     if (kIsWeb) {
-      if (event.isKeyPressed(LogicalKeyboardKey.space)) {
-        togglePlayPauseVideo();
-        return;
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.keyM)) {
-        toggleMute();
-        return;
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-        onLeftDoubleTap();
-        return;
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-        onRightDoubleTap();
-        return;
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.keyF) && event.logicalKey.keyLabel == 'F') {
-        toggleFullScreenOnWeb(appContext, tag);
-      }
-      if (event.isKeyPressed(LogicalKeyboardKey.escape)) {
-        if (isFullScreen) {
-          uni_html.document.exitFullscreen();
-          if (!isWebPopupOverlayOpen) {
-            disableFullScreen(appContext, tag);
-          }
+      // Los eventos de teclado ahora usan KeyEvent.type para determinar el tipo de evento
+      if (event is KeyDownEvent) {
+        switch (event.logicalKey) {
+          case LogicalKeyboardKey.space:
+            togglePlayPauseVideo();
+            break;
+
+          case LogicalKeyboardKey.keyM:
+            toggleMute();
+            break;
+
+          case LogicalKeyboardKey.arrowLeft:
+            onLeftDoubleTap();
+            break;
+
+          case LogicalKeyboardKey.arrowRight:
+            onRightDoubleTap();
+            break;
+
+          case LogicalKeyboardKey.keyF:
+            if (event.character == 'F') {
+              toggleFullScreenOnWeb(appContext, tag);
+            }
+            break;
+
+          case LogicalKeyboardKey.escape:
+            if (isFullScreen) {
+              uni_html.document.exitFullscreen();
+              if (!isWebPopupOverlayOpen) {
+                disableFullScreen(appContext, tag);
+              }
+            }
+            break;
         }
       }
-
-      return;
     }
   }
 
