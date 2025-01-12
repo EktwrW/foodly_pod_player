@@ -109,39 +109,47 @@ class _PodVideoQualityController extends _PodVideoController {
   ) async {
     try {
       final yt = YoutubeExplode();
-      late StreamManifest manifest;
-      // ignore: unused_local_variable
-      late Video video;
-
       try {
-        // Ya no usamos getHttpLiveStreamManifest
-        video = await yt.videos.get(youtubeIdOrUrl);
-        manifest = await yt.videos.streams.getManifest(youtubeIdOrUrl);
+        // Agregar más información de depuración
+        podLog('Intentando obtener video: $youtubeIdOrUrl');
+
+        final video = await yt.videos.get(youtubeIdOrUrl);
+        podLog('Video obtenido: ${video.title}');
+
+        final manifest = await yt.videos.streams.getManifest(youtubeIdOrUrl);
+        podLog('Manifest obtenido');
+
+        final streams = manifest.muxed;
+        final sortedStreams = streams.sortByVideoQuality();
+        final urls = <VideoQualityUrls>[];
+
+        for (final element in sortedStreams) {
+          final quality = element.videoQuality.name;
+          final url = element.url.toString();
+          urls.add(
+            VideoQualityUrls(
+              quality: quality,
+              url: url,
+            ),
+          );
+        }
+
+        yt.close();
+        return urls;
       } catch (e) {
-        podLog('Error while getting video manifest: $e');
+        podLog('Error detallado al obtener manifiesto: $e');
+
+        // Intentar manejar específicamente errores de YouTube
+        if (e is VideoUnavailableException) {
+          podLog('Video no disponible: ${e.message}');
+        }
+
         rethrow;
       }
-
-      final streams = manifest.muxed;
-      final sortedStreams = streams.sortByVideoQuality();
-      final urls = <VideoQualityUrls>[];
-
-      for (final element in sortedStreams) {
-        final quality = element.videoQuality.name;
-        final url = element.url.toString();
-        urls.add(
-          VideoQualityUrls(
-            quality: quality,
-            url: url,
-          ),
-        );
-      }
-
-      yt.close();
-      return urls;
     } catch (e) {
-      podLog('Error getting YouTube URLs: $e');
-      // En caso de error, intentar con una URL directa usando el ID de YouTube
+      podLog('Error general al obtener URLs de YouTube: $e');
+
+      // Fallback a URL de embedded si falla todo lo demás
       final videoId = youtubeIdOrUrl.contains('youtube.com')
           ? RegExp(r'v=([^&]+)').firstMatch(youtubeIdOrUrl)?.group(1)
           : youtubeIdOrUrl;
