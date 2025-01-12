@@ -107,49 +107,81 @@ class _PodVideoQualityController extends _PodVideoController {
     String youtubeIdOrUrl,
     bool live,
   ) async {
+    final yt = YoutubeExplode();
     try {
-      final yt = YoutubeExplode();
-      try {
-        // Agregar más información de depuración
-        podLog('Intentando obtener video: $youtubeIdOrUrl');
+      podLog('Intentando obtener video: $youtubeIdOrUrl');
 
-        final video = await yt.videos.get(youtubeIdOrUrl);
-        podLog('Video obtenido: ${video.title}');
+      final video = await yt.videos.get(youtubeIdOrUrl);
+      podLog('Video obtenido: ${video.title}');
 
-        final manifest = await yt.videos.streams.getManifest(youtubeIdOrUrl);
-        podLog('Manifest obtenido');
+      final manifest = await yt.videos.streams.getManifest(youtubeIdOrUrl);
+      podLog('Manifest obtenido');
 
-        final streams = manifest.muxed;
-        final sortedStreams = streams.sortByVideoQuality();
-        final urls = <VideoQualityUrls>[];
+      // Mapeo de calidades de video a enteros
+      final qualityMap = {
+        VideoQuality.low144: 144,
+        VideoQuality.low240: 240,
+        VideoQuality.medium360: 360,
+        VideoQuality.medium480: 480,
+        VideoQuality.high720: 720,
+        VideoQuality.high1080: 1080,
+        VideoQuality.high1440: 1440,
+        VideoQuality.high2160: 2160,
+      };
 
-        for (final element in sortedStreams) {
-          final quality = element.videoQuality.name;
-          final url = element.url.toString();
+      final List<StreamInfo> allStreams = [...manifest.muxed, ...manifest.videoOnly, ...manifest.audioOnly];
+
+      final urls = <VideoQualityUrls>[];
+
+      for (final element in allStreams) {
+        int quality = 0;
+
+        // Manejar diferentes tipos de streams
+        if (element is MuxedStreamInfo) {
+          quality = qualityMap[element.videoQuality] ?? 0;
+        } else if (element is VideoOnlyStreamInfo) {
+          quality = qualityMap[element.videoQuality] ?? 0;
+        } else {
+          // Omitir streams de audio solo
+          continue;
+        }
+
+        final url = element.url.toString();
+
+        podLog('Stream encontrado - Calidad: $quality, URL: $url');
+
+        urls.add(
+          VideoQualityUrls(
+            quality: quality,
+            url: url,
+          ),
+        );
+      }
+
+      yt.close();
+
+      if (urls.isEmpty) {
+        // Fallback a URL de embedding si no se encuentran streams
+        final videoId = youtubeIdOrUrl.contains('youtube.com')
+            ? RegExp(r'v=([^&]+)').firstMatch(youtubeIdOrUrl)?.group(1)
+            : youtubeIdOrUrl;
+
+        if (videoId != null) {
           urls.add(
             VideoQualityUrls(
-              quality: int.tryParse(quality) ?? 720,
-              url: url,
+              quality: 0,
+              url: 'https://www.youtube.com/embed/$videoId',
             ),
           );
         }
-
-        yt.close();
-        return urls;
-      } catch (e) {
-        podLog('Error detallado al obtener manifiesto: $e');
-
-        // Intentar manejar específicamente errores de YouTube
-        if (e is VideoUnavailableException) {
-          podLog('Video no disponible: ${e.message}');
-        }
-
-        rethrow;
       }
-    } catch (e) {
-      podLog('Error general al obtener URLs de YouTube: $e');
 
-      // Fallback a URL de embedded si falla todo lo demás
+      podLog('Número total de URLs: ${urls.length}');
+      return urls;
+    } catch (e) {
+      podLog('Error detallado al obtener URLs: $e');
+
+      // Fallback a URL de embedding en caso de error
       final videoId = youtubeIdOrUrl.contains('youtube.com')
           ? RegExp(r'v=([^&]+)').firstMatch(youtubeIdOrUrl)?.group(1)
           : youtubeIdOrUrl;
@@ -157,11 +189,12 @@ class _PodVideoQualityController extends _PodVideoController {
       if (videoId != null) {
         return [
           VideoQualityUrls(
-            quality: 720,
+            quality: 0,
             url: 'https://www.youtube.com/embed/$videoId',
           ),
         ];
       }
+
       rethrow;
     }
   }
