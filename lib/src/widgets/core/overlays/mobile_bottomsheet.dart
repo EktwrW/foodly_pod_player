@@ -224,7 +224,7 @@ class _MobileOverlayBottomControlles extends StatelessWidget {
                     ? (podCtr.podPlayerLabels.unmute ?? 'Unmute')
                     : (podCtr.podPlayerLabels.mute ?? 'Mute'),
                 color: itemColor,
-                onPressed: podCtr.toggleMute,
+                onPressed: () => podCtr.toggleMute(),
                 child: Icon(
                   podCtr.isMute ? Icons.volume_off_rounded : Icons.volume_up_rounded,
                 ),

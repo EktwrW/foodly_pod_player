@@ -26,7 +26,7 @@ class _MobileOverlay extends StatelessWidget {
                     tag: tag,
                     isForward: false,
                     height: double.maxFinite,
-                    onDoubleTap: _isRtl() ? podCtr.onRightDoubleTap : podCtr.onLeftDoubleTap,
+                    onDoubleTap: _isRtl() ? () => podCtr.onRightDoubleTap() : () => podCtr.onLeftDoubleTap(),
                   ),
                 ),
                 SizedBox(
@@ -40,7 +40,7 @@ class _MobileOverlay extends StatelessWidget {
                     isForward: true,
                     tag: tag,
                     height: double.maxFinite,
-                    onDoubleTap: _isRtl() ? podCtr.onLeftDoubleTap : podCtr.onRightDoubleTap,
+                    onDoubleTap: _isRtl() ? () => podCtr.onLeftDoubleTap() : () => podCtr.onRightDoubleTap(),
                   ),
                 ),
               ],
