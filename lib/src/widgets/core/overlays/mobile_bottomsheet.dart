@@ -219,6 +219,16 @@ class _MobileOverlayBottomControlles extends StatelessWidget {
                   );
                 },
               ),
+              MaterialIconButton(
+                toolTipMesg: podCtr.isMute
+                    ? (podCtr.podPlayerLabels.unmute ?? 'Unmute')
+                    : (podCtr.podPlayerLabels.mute ?? 'Mute'),
+                color: itemColor,
+                onPressed: podCtr.toggleMute,
+                child: Icon(
+                  podCtr.isMute ? Icons.volume_off_rounded : Icons.volume_up_rounded,
+                ),
+              ),
               const Spacer(),
               MaterialIconButton(
                 toolTipMesg: podCtr.isFullScreen
